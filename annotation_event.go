@@ -75,6 +75,12 @@ func (sdc *StackdriverClient) NewAnnotationEvent(m, ab, l, iid string, ee int64)
 	req.Header.Add("x-stackdriver-apikey", sdc.ApiKey)
 
 	res, err := client.Do(req)
+
+	// Close here to protect against redirection failures where both res and err may be non-nil.
+	if res != nil {
+		defer res.Body.Close()
+	}
+
 	if err != nil {
 		return err
 	}
