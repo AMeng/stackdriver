@@ -61,10 +61,15 @@ func (sdc *StackdriverClient) NewDeployEvent(rid, db, dt, r string) error {
 	req.Header.Add("x-stackdriver-apikey", sdc.ApiKey)
 
 	res, err := client.Do(req)
+
+	// Close here to protect against redirection failures where both res and err may be non-nil.
+	if res != nil {
+		defer res.Body.Close()
+	}
+
 	if err != nil {
 		return err
 	}
-	defer res.Body.Close()
 
 	if (res.StatusCode > 200) || (res.StatusCode < 200) {
 		responseBody, err := ioutil.ReadAll(res.Body)
