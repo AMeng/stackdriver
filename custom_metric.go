@@ -89,6 +89,7 @@ func (sdc *StackdriverClient) Send(gwm GatewayMessage) error {
 	if err != nil {
 		return err
 	}
+	defer res.Body.Close()
 
 	if (res.StatusCode > 201) || (res.StatusCode < 200) {
 		responseBody, err := ioutil.ReadAll(res.Body)

@@ -64,6 +64,7 @@ func (sdc *StackdriverClient) NewDeployEvent(rid, db, dt, r string) error {
 	if err != nil {
 		return err
 	}
+	defer res.Body.Close()
 
 	if (res.StatusCode > 200) || (res.StatusCode < 200) {
 		responseBody, err := ioutil.ReadAll(res.Body)
